@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "source": "mioku-lab/skills",
+  "skills": [
+    {
+      "name": "mioku-developer",
+      "path": "skills/mioku-developer",
+      "entry": true,
+      "description": "Entry point for Mioku bot framework development: architecture, the four package types, startup order and its traps, and routing to the right specialised skill."
+    },
+    {
+      "name": "mioku-plugin-dev",
+      "path": "skills/mioku-plugin-dev",
+      "description": "Develop, modify or review Mioku plugins: definePlugin, ctx.command, ctx.handle, event routes, message segments, config and data, permissions, AISkill and ChatRuntime, publishing."
+    },
+    {
+      "name": "mioku-service-dev",
+      "path": "skills/mioku-service-dev",
+      "description": "Create or modify Mioku services that expose a reusable api object: MiokuService, init/dispose, defineService, getService, registerServiceConfig, publishing."
+    },
+    {
+      "name": "mioku-adapter-dev",
+      "path": "skills/mioku-adapter-dev",
+      "description": "Build or modify Mioku adapters that connect a platform: defineAdapter, apiVersion, event construction, capabilities, bot typing, the driver, OneBot v11 / icqq / QQ official."
+    },
+    {
+      "name": "mioku-core-dev",
+      "path": "skills/mioku-core-dev",
+      "description": "Work on the Mioku framework itself: runtime lifecycle, loader, event bus, command manager, capability registry, event correlator, builtin core plugin, CLI, build and verification."
+    },
+    {
+      "name": "mioku-code-style",
+      "path": "skills/mioku-code-style",
+      "description": "Mioku coding conventions: package layout, file splitting, naming, TypeScript style, comment length, ctx.logger usage, git behaviour and when to bump a package version."
+    },
+    {
+      "name": "mioku-debug",
+      "path": "skills/mioku-debug",
+      "description": "Diagnose Mioku runtime problems: plugin will not load, service missing, adapter will not connect, commands not triggering, duplicate replies, silent permission denial, config not hot-reloading."
+    }
+  ]
+}
