@@ -19,7 +19,9 @@ mioku-plugin-<short>/
 ```
 
 Not every package needs every file. `config.md` only when the plugin has config,
-`README.md` always for a published package.
+`README.md` always for a published package. `config.md` sits outside `dist/`, so if the
+package has a `files` allowlist it must name it explicitly — `["dist", "config.md"]` —
+otherwise the published tarball ships without a WebUI config form.
 
 ## Entry resolution
 

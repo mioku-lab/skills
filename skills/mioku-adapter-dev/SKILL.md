@@ -131,6 +131,7 @@ because it is the first thing a user checks when something looks wrong.
 | `main` points at the package-root entry (`index.ts` is fine, jiti compiles it) | entry not found |
 | `keywords` includes `"mioku"` | not findable in the market |
 | `mioku` goes in `peerDependencies` | otherwise the framework gets bundled twice |
+| **If you ship a `files` allowlist, it must name `config.md`** | published package loses its WebUI config form |
 
 ```json
 {
@@ -186,6 +187,23 @@ fields:
         label: 访问令牌
         type: secret
 ```
+
+### Ship it: `config.md` must be in `files`
+
+`config.md` lives at the **package root**, not in `dist/`, so a `files` allowlist has to
+name it. An adapter built by tsdown normally needs:
+
+```json
+{ "files": ["dist", "config.md"] }
+```
+
+Omitting it stays invisible until someone installs the package. In the monorepo the file is
+simply on disk, but `bun add mioku-adapter-*` unpacks only what `files` matched, and
+`mioku-service-webui` resolves the form from the **installed package directory**
+(`config-page-loader.ts` → `path.join(packageDir, "config.md")`). The user then gets an
+adapter with no config page and has to hand-edit `mioku.adapters.<name>` JSON — even though
+you wrote a perfectly good `config.md`. `scripts/validate-adapter.ts` reports this as an
+error.
 
 ## References
 
