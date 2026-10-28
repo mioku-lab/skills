@@ -4,7 +4,9 @@ Two distinct things share the word "skill". This file is about Mioku's runtime c
 
 - **AISkill** — `AISkill` / `AITool` from the `mioku` package. A plugin registers it on the
   `ai` service so the bot's LLM can call your plugin's functions.
-- **Agent Skill** — the `SKILL.md` format this repository is written in. Unrelated.
+- **Agent Skill** — the `SKILL.md` format this repository is written in. Unrelated. The
+  `agent` plugin reads those directories at runtime and exposes them through its `skill`
+  tool; it never calls `aiService.registerSkill`.
 
 ## Vocabulary
 

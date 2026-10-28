@@ -26,7 +26,10 @@ Short definitions, plus the terms that are easy to mix up.
 Two different things are called "skill":
 
 - **Agent Skill** — `SKILL.md`, read by a coding agent (Codex, Claude Code, …) to learn how
-  to work on Mioku. Static documentation. This repository.
+  to work on Mioku. Static documentation. This repository. The `agent` plugin also loads
+  these at runtime from `.agents/skills`, `.claude/skills`, `~/.agents/skills`,
+  `~/.claude/skills` and `~/.codex/skills`, exposing them through its `skill` tool. That
+  path never calls `aiService.registerSkill`.
 - **AISkill** — `AISkill` / `AITool` from the `mioku` package. Registered at runtime by a
   plugin via `aiService.registerSkill(...)`, callable by the bot's model, optionally
   gated by `permission`. Documented in `mioku-plugin-dev/references/ai-tools.md`.
