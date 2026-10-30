@@ -2,20 +2,30 @@
 
 ## Dispatch
 
-`bus.dispatch(event)` does three things:
+`bus.dispatch(event)` does three things and returns whether anybody claimed the event:
 
-1. **Filter.** The command manager first decides whether a command already consumed the
-   message. Then `setFilter` hooks decide whether a given listener may see the event.
+1. **Filter.** `setFilter` hooks decide whether a given listener may see the event. The
+   command manager uses this to enforce access control per registration source.
 2. **Match.** Compare each registration's route pattern against the event's route list.
-3. **Group and run.** Group by priority ascending, then within a group run
-   `Promise.allSettled` so one throwing listener cannot affect the others.
+3. **Group and run.** Group by priority ascending, then run listeners **one at a time**
+   within a group. A handler returning `true` claims the event and ends dispatch;
+   `undefined` / `false` passes it to the next listener. A throwing listener is logged and
+   treated as not claiming, so the rest still run.
 
 ```ts
 const matched = this.#matching(event);
 for (const [priority, regs] of groupByPriority(matched)) {
-  await Promise.allSettled(regs.map((reg) => reg.handler(event)));
+  for (const reg of byOrder(regs)) {
+    if ((await reg.handler(event)) === true) return true;
+  }
 }
+return false;
 ```
+
+Nobody claiming is a valid, silent outcome: many plugins seeing one message is normal, and
+`undefined` is the default return, so existing handlers keep their broadcast behaviour.
+Commands run in a separate phase *before* the bus; a command handler returning `false`
+declines it and the message continues to the bus.
 
 ## Matching rules
 

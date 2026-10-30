@@ -108,16 +108,22 @@ catalogue.
 1. **Services load before plugins; plugins load before adapters.** Plugins rely on
    `getService` being authoritative in `setup`, and on having registered their commands
    before any message can arrive.
-2. **The command manager consumes matched messages before the bus.** Removing this makes
+2. **The command manager runs before the bus and consumes what it claims.** A command
+   that claims a message keeps it away from `ctx.handle`; a command handler returning
+   `false` declines, and the message continues to the bus. Dropping the phase order makes
    every command also reach `ctx.handle("message")`, doubling handler invocations.
-3. **Dedup lives in the core, never in adapters.** Adapters deliver losslessly; dropping an
+3. **The bus delivers in order and stops on a claim.** Listeners run one at a time within a
+   priority group; a handler returning `true` claims the event and ends dispatch, while
+   `undefined` / `false` keeps passing it on. Nobody claiming is a silent, valid outcome —
+   multiple plugins seeing one message is normal.
+4. **Dedup lives in the core, never in adapters.** Adapters deliver losslessly; dropping an
    event there permanently removes it from `!`-registered handlers.
-4. **`ctx` is a read-only projection.** Do not hand plugins the runtime object itself;
+5. **`ctx` is a read-only projection.** Do not hand plugins the runtime object itself;
    every mutation path is deliberate.
-5. **Plugin cleanup has a 15 s budget.** Never make shutdown wait on the network.
-6. **`apiVersion` is the compatibility gate.** Bump it only for a genuinely breaking
+6. **Plugin cleanup has a 15 s budget.** Never make shutdown wait on the network.
+7. **`apiVersion` is the compatibility gate.** Bump it only for a genuinely breaking
    adapter-protocol change, and expect every shipped adapter to be rejected until updated.
-7. **Access rules and `permission` are separate.** Privileged roles bypass
+8. **Access rules and `permission` are separate.** Privileged roles bypass
    `access-control.json` but must still satisfy a command's own `permission`.
 
 ## References
